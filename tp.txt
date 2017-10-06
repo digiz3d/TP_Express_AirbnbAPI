@@ -1,0 +1,9 @@
+look for lodash
+
+Faire des API Airbnb like :
+- un login crypté avec BCRYPT (ou au pire SHA1)
+- recherche de logement avec paramètres
+- booking (vérification des dates de dispo )
+- messaging
+- emailing (node mailer)
+- updating profile
