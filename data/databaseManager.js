@@ -2,7 +2,6 @@ var fs = require('fs');
 var clone = require('clone');
 var usersDb = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
 var housesDb = JSON.parse(fs.readFileSync('./data/housing.json', 'utf8'));
-//leandre.daumont@gmail.com
 module.exports = {
     getUser: function (userName) {
         return usersDb[userName] || null;
@@ -37,6 +36,21 @@ module.exports = {
             if (priceMax && parseInt(arrCopy[x].price) > parseInt(priceMax)) {
                 delete arrCopy[x];
                 continue;
+            }
+            if (startDate && endDate) {
+                console.log('here');
+                for (let dateTuple in arrCopy[x].bookedDates) {
+                    if ((Date.parse(startDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].start) &&
+                        Date.parse(endDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end))
+                        || (Date.parse(startDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].start) &&
+                            Date.parse(endDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].start))
+                        || (Date.parse(startDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end) &&
+                            Date.parse(endDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].end))) {
+                                
+                        delete arrCopy[x];
+                        break;
+                    }
+                }
             }
         }
         return arrCopy;
