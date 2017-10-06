@@ -1,4 +1,5 @@
 var fs = require('fs');
+var clone = require('clone');
 var usersDb = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
 var housesDb = JSON.parse(fs.readFileSync('./data/housing.json', 'utf8'));
 //leandre.daumont@gmail.com
@@ -18,18 +19,26 @@ module.exports = {
         }
         return arr;
     },
-    getHouse: function(city=null, beds=null, priceMin=null, priceMax=null, startDate=null, endDate=null) {
-        let arr = housesDb;
-        for (let x in housesDb) {
-            if (city && housesDb[x].city.toUpperCase() !== city.toUpperCase()) {
-                arr.splice(x, 1);
+    getHouses: function (city = null, beds = null, priceMin = null, priceMax = null, startDate = null, endDate = null) {
+        let arrCopy = clone(housesDb);
+        for (let x in arrCopy) {
+            if (city && arrCopy[x].city.toUpperCase() !== city.toUpperCase()) {
+                delete arrCopy[x];
                 continue;
             }
-            if (beds && housesDb[x].beds !== beds) {
-                arr.splice(x, 1);
+            if (beds && parseInt(arrCopy[x].beds) !== parseInt(beds)) {
+                delete arrCopy[x];
+                continue;
+            }
+            if (priceMin && parseInt(arrCopy[x].price) < parseInt(priceMin)) {
+                delete arrCopy[x];
+                continue;
+            }
+            if (priceMax && parseInt(arrCopy[x].price) > parseInt(priceMax)) {
+                delete arrCopy[x];
                 continue;
             }
         }
-        return arr;
+        return arrCopy;
     }
 }
