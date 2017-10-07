@@ -3,13 +3,13 @@ var clone = require('clone');
 var usersDb = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
 var housesDb = JSON.parse(fs.readFileSync('./data/housing.json', 'utf8'));
 module.exports = {
-    getUser: function (userName) {
+    getUser: function(userName) {
         return usersDb[userName] || null;
     },
-    setUserToken: function (userName, token) {
+    setUserToken: function(userName, token) {
         usersDb[userName].token = token;
     },
-    getHousesByCity: function (city) {
+    getHousesByCity: function(city) {
         let arr = [];
         for (let x in housesDb) {
             if (housesDb[x].city.toUpperCase() === city.toUpperCase()) {
@@ -18,7 +18,7 @@ module.exports = {
         }
         return arr;
     },
-    getHouses: function (city = null, beds = null, priceMin = null, priceMax = null, startDate = null, endDate = null) {
+    getHouses: function(city = null, beds = null, priceMin = null, priceMax = null, startDate = null, endDate = null) {
         let arrCopy = clone(housesDb);
         for (let x in arrCopy) {
             if (city && arrCopy[x].city.toUpperCase() !== city.toUpperCase()) {
@@ -41,12 +41,12 @@ module.exports = {
                 console.log('here');
                 for (let dateTuple in arrCopy[x].bookedDates) {
                     if ((Date.parse(startDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].start) &&
-                        Date.parse(endDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end))
-                        || (Date.parse(startDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].start) &&
-                            Date.parse(endDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].start))
-                        || (Date.parse(startDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end) &&
+                            Date.parse(endDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end)) ||
+                        (Date.parse(startDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].start) &&
+                            Date.parse(endDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].start)) ||
+                        (Date.parse(startDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end) &&
                             Date.parse(endDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].end))) {
-                                
+
                         delete arrCopy[x];
                         break;
                     }
@@ -54,5 +54,34 @@ module.exports = {
             }
         }
         return arrCopy;
+    },
+    isHouseBooked: function(id, startDate, endDate) {
+        //TODO check real booking status
+        return false;
+    },
+    setHouseBooked: function(id, startDate, endDate) {
+        if (!housesDb[id].bookedDates) {
+            housesDb[id].bookedDates = [];
+        }
+        housesDb[id].bookedDates.push({
+            start: startDate,
+            end: endDate
+        });
+    },
+    getHouseById: function(id) {
+        if (housesDb[id]) {
+            return housesDb[id];
+        } else {
+            return null;
+        }
+    },
+    getBookings() {
+        let bookings = [];
+        for (let h in housesDb) {
+            if (housesDb[h].bookedDates) {
+                bookings.push(housesDb[h]);
+            }
+        }
+        return bookings;
     }
 }
