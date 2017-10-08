@@ -22,7 +22,7 @@ router.get('/', function(req, res) {
     res.send("we send emails from here");
 });
 
-router.get('/send/:to/:subject/:message', function(req, res) {
+router.post('/send/:to/:subject/:message', function(req, res) {
     var message = {
         from: 'sender@server.com',
         to: req.params.to,

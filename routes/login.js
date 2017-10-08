@@ -10,19 +10,19 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-    if (!dbContext.getUser(req.body.userName)) {
+    if (!dbContext.getUser(req.body.username)) {
         res.status(401).render('login', { title: 'Login', message: 'Wrong username or password' });
     }
-    bcrypt.compare(req.body.password, dbContext.getUser(req.body.userName).password, function (err, result) {
+    bcrypt.compare(req.body.password, dbContext.getUser(req.body.username).password, function (err, result) {
         if (err) {
             res.status(500).send(err.message);
         }
         else {
             if (result) {
                 let token = randomstring.generate(20);
-                dbContext.setUserToken(req.body.userName, token);
+                dbContext.setUserToken(req.body.username, token);
                 res.cookie("token",token);
-                res.render('home',{ userName: req.body.userName});
+                res.render('home',{ username: req.body.username});
             }
             else {
                 res.status(401).render('login', { title: 'Login', message: 'Wrong username or password' });

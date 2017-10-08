@@ -7,21 +7,44 @@ block content
   p The following routes can be used:
   ul
     li
-      p <b>/login</b> (mandatory for booking, managing profile or messaging)
+      p <b>GET /login</b>
+        <br/>display login form
     li
-      p <b>/search</b> to search for all houses use
+      p <b>POST /login</b>
+        <br/>body values (application/x-www-form-urlencoded) : username , password
+        <br/>attempt to login using values from the form
+        <br/><b>mandatory for booking, managing profile or messaging</b>
     li
-      p <b>/search/city?xxx</b> to search for all houses from a specific city
-        |<br/>Avaible query strings are (all integers) : beds(number of beds), priceMin (minimum price), priceMax(maximum price)
+      p <b>GET /search</b>
+        <br/>to search for all houses use
     li
-      p <b>/search/city/startDate/endDate?xxx</b> to search for all houses from a specific city avaible between the specified dates
-        |<br/>Avaible query strings are (all integers) : beds(number of beds), priceMin (minimum price), priceMax(maximum price)
+      p <b>GET /search/<i>city</i>?xxx</b>
+        <br/>to search for all houses from a specific city
+        <br/>Avaible query strings are (all integers) : beds(number of beds), priceMin (minimum price), priceMax(maximum price)
     li
-      p <b>POST</b> method : <b>/book/id/startDate/endDate</b> books the specified house id for the given dates
+      p <b>GET /search/<i>city</i>/<i>startDate</i>/<i>endDate</i>?xxx</b>
+        <br/>to search for all houses from a specific city avaible between the specified dates
+        <br/>Avaible query strings are (all integers) : beds(number of beds), priceMin (minimum price), priceMax(maximum price)
+    li
+      p <b>POST /book/<i>id</i>/<i>startDate</i>/<i>endDate</i></b> books the specified house id for the given dates
     li
       p messaging ???
     li
-      p <b>/send/to/subject/message</b> to send an email
-        |<br/>to = email that will receive the emails
-        |<br/>subject = subject of the email
-        |<br/>message = text content of the email
+      p <b>POST /send/to/subject/message</b>
+        <br/>to send an email
+        <br/>to = email that will receive the emails
+        <br/>subject = subject of the email
+        <br/>message = text content of the email
+    li
+      p <b>GET /users/<i>userid</i></b>
+        <br/>get user infos
+        <br/><i>userid</i> is the user's ID
+    li
+      p <b>GET /users/<i>userid</i>/<i>information</i></b>
+        <br/><i>userid</i> is the user's ID
+        <br/><i>information</i> can be lastname, firstname, email...
+    li
+      p <b>PATCH /users/<i>userid</i>/<i>information</i></b>
+        <br/>body value (application/x-www-form-urlencoded) : value
+        <br/><i>userid</i> is the user's ID
+        <br/><i>information</i> can be lastname, firstname, email...
