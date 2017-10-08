@@ -3,8 +3,21 @@ var clone = require('clone');
 var usersDb = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
 var housesDb = JSON.parse(fs.readFileSync('./data/housing.json', 'utf8'));
 module.exports = {
+    getUserNoPassword: function(userName) {
+        let user = usersDb[userName] || null;
+        /* so we don't delete the original password :^) */
+        let ret = clone(user);
+        if (ret.password) delete ret.password;
+        return ret;
+    },
     getUser: function(userName) {
         return usersDb[userName] || null;
+    },
+    getUsers: function() {
+        return usersDb;
+    },
+    setUserInfo: function(userName, key, value = null) {
+        usersDb[userName][key] = value;
     },
     setUserToken: function(userName, token) {
         usersDb[userName].token = token;
