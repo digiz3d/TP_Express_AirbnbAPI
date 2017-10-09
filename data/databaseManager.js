@@ -5,12 +5,12 @@ var housesDb = JSON.parse(fs.readFileSync('./data/housing.json', 'utf8'));
 
 function checkHouseDates(houseId, startDate, endDate) {
     for (let dateTuple in housesDb[houseId].bookedDates) {
-        if ((Date.parse(startDate) >= Date.parse(housesDb[houseId].bookedDates[dateTuple].start) &&
-            Date.parse(endDate) <= Date.parse(housesDb[houseId].bookedDates[dateTuple].end)) ||
-            (Date.parse(startDate) <= Date.parse(housesDb[houseId].bookedDates[dateTuple].start) &&
-                Date.parse(endDate) >= Date.parse(housesDb[houseId].bookedDates[dateTuple].start)) ||
-            (Date.parse(startDate) <= Date.parse(housesDb[houseId].bookedDates[dateTuple].end) &&
-                Date.parse(endDate) >= Date.parse(housesDb[houseId].bookedDates[dateTuple].end))) {
+        if ((Date.parse(startDate) >= Date.parse(housesDb[houseId].bookedDates[dateTuple].start) &&     /* date de départ   supérieure à la date de départ  réservée */
+            Date.parse(endDate) <= Date.parse(housesDb[houseId].bookedDates[dateTuple].end)) ||         /* date de fin      inférieure à la date de fin     réservée */
+            (Date.parse(startDate) <= Date.parse(housesDb[houseId].bookedDates[dateTuple].start) &&     /* date de départ   inférieure à la date de départ  réservée */
+                Date.parse(endDate) >= Date.parse(housesDb[houseId].bookedDates[dateTuple].start)) ||   /* date de fin      supérieure à la date de départ  réservée */
+            (Date.parse(startDate) <= Date.parse(housesDb[houseId].bookedDates[dateTuple].end) &&       /* date de départ   inférieure à la date de fin     réservée */
+                Date.parse(endDate) >= Date.parse(housesDb[houseId].bookedDates[dateTuple].end))) {     /* date de fin      supérieure à la date de fin     réservée */
             return true
         }
     }
