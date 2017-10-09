@@ -5,11 +5,11 @@ var dbContext = require('../data/databaseManager.js');
 var randomstring = require("randomstring");
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     res.render('login', { title: 'Login' });
 });
 
-router.post('/', function (req, res, next) {
+router.post('/', function (req, res) {
     if (!dbContext.getUser(req.body.username)) {
         res.status(401).render('login', { title: 'Login', message: 'Wrong username or password' });
     }
