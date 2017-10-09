@@ -11,10 +11,11 @@ router.get('/', function(req, res) {
 /* create new booking */
 router.get('/:id/:startDate/:endDate', function(req, res) {
     if (dbContext.getHouseById(req.params.id) != null) {
-        if (!dbContext.isHouseBooked(req.params.id, req.pareq.params.idrams.startDate, req.params.endDate)) {
+        if (!dbContext.isHouseBooked(req.params.id, req.params.startDate, req.params.endDate)) {
             dbContext.setHouseBooked(req.params.id, req.params.startDate, req.params.endDate)
             res.send("Housing booked :)");
-            transport.sendMail(mailer.getMessage("leandre.daumont@gmail.com", "House booked !", "Congrats, you just booked the house n°" + 
+            var transport = mailer.getMailer();
+            transport.sendMail(mailer.getMessage("pintilie.c.a@gmail.com", "House booked !", "Congrats, you just booked the house n°" + 
             req.params.id + " from " + req.params.startDate + " to " + req.params.endDate), function(error, info){
                 if(error){
                     res.status(500);
