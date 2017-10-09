@@ -12,8 +12,26 @@ var login = require('./routes/login');
 var search = require('./routes/search');
 var book = require('./routes/book');
 var mail = require('./routes/mail');
-
+var messages = require('./routes/messages');
 var app = express();
+
+
+
+var socketioserver = require('http').createServer(function(req,res) {
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.end('test');
+}).listen(3001, function() {
+    console.log('listening on *:3001');
+});
+
+// no "var" keyword or the variable is local to this module.
+io = require('socket.io')(socketioserver);
+
+io.on('connection', function(socket){
+    socket.on('message', function(msg){
+      io.emit('message', msg);
+    });
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,6 +52,7 @@ app.use('/login', login);
 app.use('/search', search);
 app.use('/book', book);
 app.use('/mail', mail);
+app.use('/messages', messages);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
