@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
 /* create new booking */
 router.get('/:id/:startDate/:endDate', function(req, res) {
     if (dbContext.getHouseById(req.params.id) != null) {
-        if (!dbContext.isHouseBooked()) {
+        if (!dbContext.isHouseBooked(req.params.id, req.params.startDate, req.params.endDate)) {
             dbContext.setHouseBooked(req.params.id, req.params.startDate, req.params.endDate)
             res.send("Housing booked :)");
         } else {
