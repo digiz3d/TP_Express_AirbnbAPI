@@ -18,8 +18,8 @@ var app = express();
 
 
 var socketioserver = require('http').createServer(function(req,res) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('test');
+    res.writeHead(400, {'Content-Type': 'text/html'});
+    res.end('websocket server :)');
 }).listen(3001, function() {
     console.log('listening on *:3001');
 });
