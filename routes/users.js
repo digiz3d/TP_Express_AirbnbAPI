@@ -5,6 +5,7 @@ var dbContext = require('../data/databaseManager.js');
 /* GET users listing. */
 router.get('/', function(req, res) {
     /* TODO delete passwords from the results */
+    res.contentType("application/json")
     res.send(dbContext.getUsers());
 });
 
