@@ -51,7 +51,6 @@ module.exports = {
                 continue;
             }
             if (startDate && endDate) {
-                console.log('here');
                 for (let dateTuple in arrCopy[x].bookedDates) {
                     if ((Date.parse(startDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].start) &&
                             Date.parse(endDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end)) ||
@@ -59,7 +58,6 @@ module.exports = {
                             Date.parse(endDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].start)) ||
                         (Date.parse(startDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end) &&
                             Date.parse(endDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].end))) {
-
                         delete arrCopy[x];
                         break;
                     }

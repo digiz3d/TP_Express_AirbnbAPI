@@ -3,19 +3,17 @@ var router = express.Router();
 var dbContext = require('../data/databaseManager.js');
 var nodemailer = require('nodemailer');
 
-let config = {
-    pool: true,
-    host: 'smtp.example.com', // TODO change here
-    port: 465,
-    secure: true,
+var config = {
+    host: 'smtp.gmail.com', // TODO change here
+    port: 587,
+    secure: false,
     auth: {
-        user: 'username', // TODO change here
-        pass: 'password' // TODO change here
-    },
-    socketTimeout: 5,
-    connectionTimeout: 5
+        user: 'cpe.development.global@gmail.com', // TODO change here
+        pass: '6@Z*!LKu=Lns`.Gdnzi8k"*wyr$.Y*' // TODO change here
+    }
 };
-let transporter = nodemailer.createTransport(config);
+
+var transporter = nodemailer.createTransport(config);
 
 /* GET mails */
 router.get('/', function(req, res) {
@@ -35,7 +33,7 @@ router.post('/send/:to/:subject/:message', function(req, res) {
             res.send("rip : "+error);
         }
         else {
-            res.send("mail send to"+req.params.to);
+            res.send("mail send to "+req.params.to);
         }
     });
 });
