@@ -2,27 +2,50 @@ var fs = require('fs');
 var clone = require('clone');
 var usersDb = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
 var housesDb = JSON.parse(fs.readFileSync('./data/housing.json', 'utf8'));
+
+function checkHouseDates(houseId, startDate, endDate) {
+    for (let dateTuple in housesDb[houseId].bookedDates) {
+        if ((Date.parse(startDate) >= Date.parse(housesDb[houseId].bookedDates[dateTuple].start) &&
+            Date.parse(endDate) <= Date.parse(housesDb[houseId].bookedDates[dateTuple].end)) ||
+            (Date.parse(startDate) <= Date.parse(housesDb[houseId].bookedDates[dateTuple].start) &&
+                Date.parse(endDate) >= Date.parse(housesDb[houseId].bookedDates[dateTuple].start)) ||
+            (Date.parse(startDate) <= Date.parse(housesDb[houseId].bookedDates[dateTuple].end) &&
+                Date.parse(endDate) >= Date.parse(housesDb[houseId].bookedDates[dateTuple].end))) {
+            return true
+        }
+    }
+    return false;
+}
+
 module.exports = {
-    getUserNoPassword: function(username) {
+    getUserNoPassword: function (username) {
         let user = usersDb[username] || null;
         /* so we don't delete the original password :^) */
         let ret = clone(user);
         if (ret.password) delete ret.password;
         return ret;
     },
-    getUser: function(username) {
+    getUser: function (username) {
         return usersDb[username] || null;
     },
-    getUsers: function() {
+    getUsers: function () {
         return usersDb;
     },
-    setUserInfo: function(username, key, value = null) {
+    setUserInfo: function (username, key, value = null) {
         usersDb[username][key] = value;
     },
-    setUserToken: function(username, token) {
+    setUserToken: function (username, token) {
         usersDb[username].token = token;
     },
-    getHousesByCity: function(city) {
+    verifyUserToken: function (sessionToken) {
+        for (var userKey in usersDb) {
+            if (userKey.token === token) {
+                return true
+            }
+        }
+        return false;
+    },
+    getHousesByCity: function (city) {
         let arr = [];
         for (let x in housesDb) {
             if (housesDb[x].city.toUpperCase() === city.toUpperCase()) {
@@ -31,7 +54,7 @@ module.exports = {
         }
         return arr;
     },
-    getHouses: function(city = null, beds = null, priceMin = null, priceMax = null, startDate = null, endDate = null) {
+    getHouses: function (city = null, beds = null, priceMin = null, priceMax = null, startDate = null, endDate = null) {
         let arrCopy = clone(housesDb);
         for (let x in arrCopy) {
             if (city && arrCopy[x].city.toUpperCase() !== city.toUpperCase()) {
@@ -51,26 +74,18 @@ module.exports = {
                 continue;
             }
             if (startDate && endDate) {
-                for (let dateTuple in arrCopy[x].bookedDates) {
-                    if ((Date.parse(startDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].start) &&
-                            Date.parse(endDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end)) ||
-                        (Date.parse(startDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].start) &&
-                            Date.parse(endDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].start)) ||
-                        (Date.parse(startDate) <= Date.parse(arrCopy[x].bookedDates[dateTuple].end) &&
-                            Date.parse(endDate) >= Date.parse(arrCopy[x].bookedDates[dateTuple].end))) {
-                        delete arrCopy[x];
-                        break;
-                    }
+                if (checkHouseDates(x, startDate, endDate)) {
+                    delete arrCopy[x];
+                    continue;
                 }
             }
         }
         return arrCopy;
     },
-    isHouseBooked: function(id, startDate, endDate) {
-        //TODO check real booking status
-        return false;
+    isHouseBooked: function (id, startDate, endDate) {
+        return checkHouseDates(id, startDate, endDate);
     },
-    setHouseBooked: function(id, startDate, endDate) {
+    setHouseBooked: function (id, startDate, endDate) {
         if (!housesDb[id].bookedDates) {
             housesDb[id].bookedDates = [];
         }
@@ -79,7 +94,7 @@ module.exports = {
             end: endDate
         });
     },
-    getHouseById: function(id) {
+    getHouseById: function (id) {
         if (housesDb[id]) {
             return housesDb[id];
         } else {
